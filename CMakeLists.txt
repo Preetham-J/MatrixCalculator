@@ -7,7 +7,9 @@ add_definitions('-Wall')
 set(SOURCES
     src/main.cpp
     src/matrix.cpp
+    src/system.cpp
     include/matrix.hpp
+    include/system.hpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})

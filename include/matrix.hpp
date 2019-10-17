@@ -9,16 +9,22 @@
 #define MATRIX_HPP
 
 #include <Eigen/Dense>
-
+#include <string>
 
 class Matrix 
 {
     public:
         Matrix(int rows, int columns);
-        void addRow(string row);
+        void init();
+        bool addRow(std::string row);
+        void print();
 
     private:
-        Eigen::MatrixXd& matrix;
+        int rows;
+        int columns;
+        Eigen::MatrixXd matrix;
+
+        int current_row = 0;
         
 };
 
