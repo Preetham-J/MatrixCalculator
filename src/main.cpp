@@ -27,10 +27,6 @@ int main()
 
         if (option == "A")
         {
-            // Plan:
-            // Option 1) user wants to enter matrix
-            // - enter number of rows, columns, name of matrix
-            // - enter matrix row by row and store in Matrix object
             int m = 0;
             int n = 0;
             std::string name;
@@ -49,7 +45,15 @@ int main()
             // Option 2) user wants to compute
             // - enter operation
             // - parse entered operation and display result/errors
-            std::cout << "Not currently supported." << std::endl;
+            std::cout << "Only addition is currently supported." << std::endl;
+            std::string matrix_1;
+            std::string matrix_2;
+            std::cout << "Enter the first matrix to add: " << std::endl;
+            std::cin >> matrix_1;
+            std::cout << "Enter the second matrix to add: " << std::endl;
+            std::cin >> matrix_2;
+            std::cin.ignore(256, '\n');
+            system.addMatrices(matrix_1, matrix_2);
         }
         else if (option == "C")
         {
