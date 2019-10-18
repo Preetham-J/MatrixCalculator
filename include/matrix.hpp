@@ -17,7 +17,10 @@ class Matrix
         Matrix(int rows, int columns);
         void init();
         bool addRow(std::string row);
+        Eigen::MatrixXd& getMatrix();
         void print();
+        int getRows();
+        int getColumns();
 
     private:
         int rows;
