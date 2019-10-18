@@ -19,7 +19,10 @@ class System
         System();
         ~System();
         void addMatrix(const std::string& key, int rows, int columns);
-        bool addMatrices(const std::string& key_1, const std::string& key_2);
+
+        void parseComputation();
+        void addMatrices(const std::string& key_1, const std::string& key_2);
+
         bool isRunning();
         void setRunning(bool value);
         void printSystem();
