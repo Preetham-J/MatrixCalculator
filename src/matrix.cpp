@@ -20,7 +20,7 @@ Matrix::Matrix(int rows, int columns)
 
 void Matrix::init()
 {
-    for(int i = 0; i < columns; i++)
+    for(int i = 0; i < rows; i++)
     {
         std::string row;
         std::getline(std::cin, row, '\n');
@@ -60,6 +60,20 @@ bool Matrix::addRow(std::string row)
     return true;
 }
 
+Eigen::MatrixXd& Matrix::getMatrix()
+{
+    return matrix;
+}
+
+int Matrix::getRows()
+{
+    return rows;
+}
+
+int Matrix::getColumns()
+{
+    return columns;
+}
 
 void Matrix::print()
 {
