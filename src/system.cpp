@@ -7,6 +7,7 @@
 
 #include "system.hpp"
 
+#include <string>
 #include <utility>
 #include <iostream>
 #include <cctype>
@@ -20,8 +21,6 @@ void System::addMatrix(const std::string& key, int rows, int columns)
 {
    Matrix mat{rows, columns};
    mat.init(); 
-   
-   // mat.print();
    
    matrices.insert(std::make_pair(key, mat)); 
 }
@@ -46,7 +45,7 @@ void System::parseComputation()
                 return;
             }
         }
-        else if ((std::isdigit(c)) || (s == "+") || (s == "+") || (s == "*") || (s == "/"))
+        else if ((std::isdigit(c)) || (s == "+") || (s == "-") || (s == "*") || (s == "/"))
         {
             keys.push_back(s);
         }
@@ -62,15 +61,15 @@ void System::parseComputation()
     }
     else if (keys[1] == "-")
     {
-        std::cout << "Not supported." << std::endl;
+        subtractMatrices(keys[0], keys[2]);
     }
     else if (keys[1] == "*")
     {
-        std::cout << "Not supported." << std::endl;
+        multiplyMatrices(keys[0], keys[2]);
     }
     else if (keys[1] == "/")
     {
-        std::cout << "Not supported." << std::endl;
+        divideByScalar(keys[0], keys[2]);
     }
     else
     {
@@ -80,6 +79,12 @@ void System::parseComputation()
 
 void System::addMatrices(const std::string& key_1, const std::string& key_2)
 {
+    //if (std::isdigit(*key_1.data()) || std::isdigit(*key_2.data()))
+    //{
+    //    std::cout << "Can not add matrices and scalars." << std::endl;
+    //    return;
+    //}
+
     Matrix matrix_1 = matrices.find(key_1)->second;
     Matrix matrix_2 = matrices.find(key_2)->second;
 
@@ -89,8 +94,62 @@ void System::addMatrices(const std::string& key_1, const std::string& key_2)
         return;
     }
 
-    Eigen::MatrixXd matrix_3 = matrix_1.getMatrix() + matrix_2.getMatrix();
-    std::cout << std::endl << matrix_3 << std::endl << std::endl;
+    Matrix result(matrix_1.getRows(), matrix_1.getColumns());
+    result.setMatrix(matrix_1 + matrix_2);
+    result.print();
+}
+
+void System::subtractMatrices(const std::string& key_1, const std::string& key_2)
+{
+    //if (std::isdigit(*key_1.data()) || std::isdigit(*key_2.data()))
+    //{
+    //    std::cout << "Can not subtract matrices and scalars." << std::endl;
+    //    return;
+    //}
+
+    Matrix matrix_1 = matrices.find(key_1)->second;
+    Matrix matrix_2 = matrices.find(key_2)->second;
+
+    if ((matrix_1.getRows() != matrix_2.getRows()) || (matrix_1.getColumns() != matrix_2.getColumns()))
+    {
+        std::cout << "The matrices entered do not have the same dimensions!" << std::endl;
+        return;
+    }
+
+    Matrix result(matrix_1.getRows(), matrix_1.getColumns());
+    result.setMatrix(matrix_1 - matrix_2);
+    result.print();
+}
+
+void System::multiplyMatrices(const std::string& key_1, const std::string& key_2)
+{
+    Matrix matrix_1 = matrices.find(key_1)->second;
+    Matrix matrix_2 = matrices.find(key_2)->second;
+
+    Matrix result(matrix_1.getRows(), matrix_1.getColumns());
+    result.setMatrix(matrix_1 * matrix_2);
+    result.print();
+}
+
+void System::divideByScalar(const std::string& key_1, const std::string& key_2)
+{
+    //if (std::isdigit(*key_1.data()) && !std::isdigit(*key_2.data()))
+    //{
+    //    std::cout << "Can not divide scalar by matrix" << std::endl;
+    //    return;
+    //}
+    //else if (!std::isdigit(*key_1.data()) && !std::isdigit(*key_2.data()))
+    //{
+    //    std::cout << "Can not divide a matrix by matrix" << std::endl;
+    //    return;
+    //}
+
+    Matrix matrix = matrices.find(key_1)->second;
+    int divisor = std::stoi(key_2);
+
+    Matrix result(matrix.getRows(), matrix.getColumns());
+    result.setMatrix(matrix / divisor);
+    result.print();
 }
 
 void System::printSystem()
