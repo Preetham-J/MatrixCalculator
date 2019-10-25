@@ -48,6 +48,13 @@ class Matrix
             return res;
         }
 
+        Matrix& operator * (int& val)
+        {
+            Matrix& res = *this;
+            res.matrix = this->getMatrix() * val;
+            return res;
+        }
+
         Matrix& operator / (int& val)
         {
             Matrix& res = *this;

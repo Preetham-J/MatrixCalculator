@@ -24,6 +24,7 @@ class System
         void addMatrices(const std::string& key_1, const std::string& key_2);
         void subtractMatrices(const std::string& key_1, const std::string& key_2);
         void multiplyMatrices(const std::string& key_1, const std::string& key_2);
+        void multiplyByScalar(const std::string& key_1, const std::string& key_2);
         void divideByScalar(const std::string& key_1, const std::string& key_2);
 
         bool isRunning();
