@@ -5,9 +5,9 @@ Here's a basic command line matrix calculator for those who want a fast and non-
 - Create matrices in a row-by-row fashion
 - Store matrices by name
 - View stored matrices
-- Addition between stored matrices
+- Addition, subtraction, and multiplication between matrices
+- Multiplication and division between matrices and scalars
 
 # To Do
-- All other computations (division, multiplication, subtraction)
-- Computations with scalars
+- Support multi-variable computations (currently only a single computation per line)
 - Maybe a GUI
