@@ -23,6 +23,37 @@ class Matrix
         void print();
         int getRows();
         int getColumns();
+        void setMatrix(Eigen::MatrixXd& new_matrix);
+        void setMatrix(Matrix& new_matrix);
+
+
+        Matrix& operator + (Matrix& obj)
+        {
+            Matrix& res = *this;
+            res.matrix = this->getMatrix() + obj.getMatrix();
+            return res;
+        }
+
+        Matrix& operator - (Matrix& obj)
+        {
+            Matrix& res = *this;
+            res.matrix = this->getMatrix() - obj.getMatrix();
+            return res;
+        }
+
+        Matrix& operator * (Matrix& obj)
+        {
+            Matrix& res = *this;
+            res.matrix = this->getMatrix() * obj.getMatrix();
+            return res;
+        }
+
+        Matrix& operator / (int& val)
+        {
+            Matrix& res = *this;
+            res.matrix = this->getMatrix() / val;
+            return res;
+        }
 
     private:
         int rows;

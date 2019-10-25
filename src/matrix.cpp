@@ -60,6 +60,16 @@ bool Matrix::addRow(std::string row)
     return true;
 }
 
+void Matrix::setMatrix(Eigen::MatrixXd& new_matrix)
+{
+    matrix = new_matrix;
+}
+
+void Matrix::setMatrix(Matrix& new_matrix)
+{
+    matrix = new_matrix.getMatrix();
+}
+
 Eigen::MatrixXd& Matrix::getMatrix()
 {
     return matrix;

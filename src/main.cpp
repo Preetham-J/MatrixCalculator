@@ -48,7 +48,7 @@ int main()
         }
         else if (option == "B")
         {
-            std::cout << "Only addition is currently supported." << std::endl << std::endl;
+            std::cout << "Only matrix computation is currently supported." << std::endl << std::endl;
             system.parseComputation();
         }
         else if (option == "C")

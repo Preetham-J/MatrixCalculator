@@ -22,6 +22,9 @@ class System
 
         void parseComputation();
         void addMatrices(const std::string& key_1, const std::string& key_2);
+        void subtractMatrices(const std::string& key_1, const std::string& key_2);
+        void multiplyMatrices(const std::string& key_1, const std::string& key_2);
+        void divideByScalar(const std::string& key_1, const std::string& key_2);
 
         bool isRunning();
         void setRunning(bool value);
