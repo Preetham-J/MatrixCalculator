@@ -121,8 +121,7 @@ void System::addMatrices(const std::string& key_1, const std::string& key_2)
         return;
     }
 
-    Matrix result(matrix_1.getRows(), matrix_1.getColumns());
-    result.setMatrix(matrix_1 + matrix_2);
+    Matrix result = matrix_1 + matrix_2;
     result.print();
 }
 
@@ -137,8 +136,7 @@ void System::subtractMatrices(const std::string& key_1, const std::string& key_2
         return;
     }
 
-    Matrix result(matrix_1.getRows(), matrix_1.getColumns());
-    result.setMatrix(matrix_1 - matrix_2);
+    Matrix result = matrix_1 + matrix_2;
     result.print();
 }
 
@@ -147,8 +145,7 @@ void System::multiplyByScalar(const std::string& key_1, const std::string& key_2
     int multiplier = std::stoi(key_1);
     Matrix matrix = matrices.find(key_2)->second;
 
-    Matrix result(matrix.getRows(), matrix.getColumns());
-    result.setMatrix(matrix * multiplier);
+    Matrix result = matrix * multiplier;
     result.print();
 }
 
@@ -157,8 +154,7 @@ void System::multiplyMatrices(const std::string& key_1, const std::string& key_2
     Matrix matrix_1 = matrices.find(key_1)->second;
     Matrix matrix_2 = matrices.find(key_2)->second;
 
-    Matrix result(matrix_1.getRows(), matrix_1.getColumns());
-    result.setMatrix(matrix_1 * matrix_2);
+    Matrix result = matrix_1 * matrix_2;
     result.print();
 }
 
@@ -167,8 +163,7 @@ void System::divideByScalar(const std::string& key_1, const std::string& key_2)
     Matrix matrix = matrices.find(key_1)->second;
     int divisor = std::stoi(key_2);
 
-    Matrix result(matrix.getRows(), matrix.getColumns());
-    result.setMatrix(matrix / divisor);
+    Matrix result = matrix / divisor;
     result.print();
 }
 

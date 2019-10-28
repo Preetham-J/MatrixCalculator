@@ -10,23 +10,35 @@
 
 #include <Eigen/Dense>
 #include <string>
+#include <iostream>
+
 
 class Matrix 
 {
     public:
+        /* Construct matrix with n rows, m columns. */
         Matrix(int rows, int columns);
+        /* Copy constructor. */
+        Matrix(const Matrix& obj);
 
+        /* Initialize Eigen Matrix member given user. */
         void init();
-        bool addRow(std::string row);
+        /* Add row to internal matrix. */
+        bool addRow(std::string row, int current_row);
 
+        /* Get reference to internal matrix. */
         Eigen::MatrixXd& getMatrix();
+        /* Print matrix. */
         void print();
+        /* Get number of rows in matrix. */
         int getRows();
+        /* Get number of columns in matrix. */
         int getColumns();
+        /* Set internal matrix to new Eigen matrix. */
         void setMatrix(Eigen::MatrixXd& new_matrix);
-        void setMatrix(Matrix& new_matrix);
 
-
+        /* Operator Overloads*/
+        /* Matrix + Matrix*/
         Matrix& operator + (Matrix& obj)
         {
             Matrix& res = *this;
@@ -34,6 +46,7 @@ class Matrix
             return res;
         }
 
+        /* Matrix - Matrix*/
         Matrix& operator - (Matrix& obj)
         {
             Matrix& res = *this;
@@ -41,6 +54,7 @@ class Matrix
             return res;
         }
 
+        /* Matrix * Matrix*/
         Matrix& operator * (Matrix& obj)
         {
             Matrix& res = *this;
@@ -48,6 +62,7 @@ class Matrix
             return res;
         }
 
+        /* Matrix * Scalar*/
         Matrix& operator * (int& val)
         {
             Matrix& res = *this;
@@ -55,6 +70,7 @@ class Matrix
             return res;
         }
 
+        /* Matrix / Scalar*/
         Matrix& operator / (int& val)
         {
             Matrix& res = *this;
@@ -62,13 +78,19 @@ class Matrix
             return res;
         }
 
-    private:
-        int rows;
-        int columns;
-        Eigen::MatrixXd matrix;
+        /* Matrix Copy*/
+        Matrix& operator = (Matrix& obj)
+        {
+            this->matrix = obj.matrix;
+            this->rows = obj.rows;
+            this->columns = obj.columns;
+            return *this;
+        }
 
-        int current_row = 0;
-        
+    private:
+        int rows;                      // Matrix rows
+        int columns;                   // Matrix columns
+        Eigen::MatrixXd matrix;        // Internal Eigen Matrix
 };
 
 

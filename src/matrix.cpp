@@ -18,13 +18,21 @@ Matrix::Matrix(int rows, int columns)
       matrix(rows, columns)
 {}
 
+Matrix::Matrix(const Matrix& obj)
+{
+    rows = obj.rows;
+    columns = obj.columns;
+    matrix = obj.matrix;
+}
+
 void Matrix::init()
 {
+    int current_row = 0;
     for(int i = 0; i < rows; i++)
     {
         std::string row;
         std::getline(std::cin, row, '\n');
-        if (addRow(row))
+        if (addRow(row, current_row))
         {
             current_row++;
         }
@@ -36,8 +44,7 @@ void Matrix::init()
     }
 }
 
-
-bool Matrix::addRow(std::string row)
+bool Matrix::addRow(std::string row, int current_row)
 {
     std::istringstream iss(row);
     std::vector<int> tokens;
@@ -63,11 +70,6 @@ bool Matrix::addRow(std::string row)
 void Matrix::setMatrix(Eigen::MatrixXd& new_matrix)
 {
     matrix = new_matrix;
-}
-
-void Matrix::setMatrix(Matrix& new_matrix)
-{
-    matrix = new_matrix.getMatrix();
 }
 
 Eigen::MatrixXd& Matrix::getMatrix()
