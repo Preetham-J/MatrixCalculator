@@ -5,10 +5,10 @@
  * Distributed under terms of the MIT license.
  */
 
+#include "system.hpp"
+
 #include <iostream>
 #include <string>
-
-#include "system.hpp"
 
 
 int main()
@@ -48,7 +48,6 @@ int main()
         }
         else if (option == "B")
         {
-            std::cout << "Only matrix computation is currently supported." << std::endl << std::endl;
             system.parseComputation();
         }
         else if (option == "C")
