@@ -13,6 +13,7 @@
 #include "matrix.hpp"
 
 
+/* Store and perform computations on internal matrices.*/
 class System
 {
     public:
