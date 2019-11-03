@@ -13,6 +13,7 @@
 #include <iostream>
 
 
+/* Matrix wrapper class for Eigen Matrices */
 class Matrix 
 {
     public:
