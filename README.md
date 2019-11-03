@@ -1,5 +1,5 @@
 # MatrixCalculator
-Here's a basic command line matrix calculator for those who want a fast and non-internet dependent tool! I decided to create this as many of my courses rely on various matrix calculations, which are very time consuming to do by hand.
+Here's a basic command line matrix calculator for those who want a fast and non-internet dependent tool! I decided to create this project to explore the Eigen C++ library, as well as to create a fast tool that I could use for matrix calculations in many of my courses (which are time-consuming to do by hand).
 
 # Currently Working
 ![alt text](/screenshots/main.png?raw=true "Main menu.")
