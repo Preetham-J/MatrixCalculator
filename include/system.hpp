@@ -21,15 +21,17 @@ class System
         System();
         /* Destruct system. */
         ~System();
+
         /* Add a matrix to the system. */
         void addMatrix(const std::string& key, int rows, int columns);
-
-        /* Parse user inputted computation. */
+        /* */
         void parseComputation();
+        /* Implements Shunting-Yard (Reverse Polish Notation) */
+        std::string calculate(const std::string& expression)
         /* Add two matrices. */
-        void addMatrices(const std::string& key_1, const std::string& key_2);
+        void add(const std::string& key_1, const std::string& key_2);
         /* Subtract two matrices. */
-        void subtractMatrices(const std::string& key_1, const std::string& key_2);
+        void subtract(const std::string& key_1, const std::string& key_2);
         /* Multiply two matrices. */
         void multiplyMatrices(const std::string& key_1, const std::string& key_2);
         /* Multiply a matrix and scalar. */
