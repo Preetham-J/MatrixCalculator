@@ -6,6 +6,7 @@
  */
 
 #include "system.hpp"
+#include "parser.hpp"
 
 #include <string>
 #include <utility>
@@ -30,90 +31,123 @@ void System::parseComputation()
     std::string computation;
     std::getline(std::cin, computation, '\n');
     std::vector<std::string> keys;
-    for (auto& c : computation)
-    {
-        std::string s(1, c);
-        if (std::isalpha(c))
-        {
-            if (matrices.count(s) > 0)
-            {
-                keys.push_back(s);
-            }
-            else
-            {
-                std::cout << "Matrix " << c << " does not exist!" << std::endl;
-                return;
-            }
-        }
-        else if ((std::isdigit(c)) || (s == "+") || (s == "-") || (s == "*") || (s == "/"))
-        {
-            keys.push_back(s);
-        }
-        if (keys.size() == 3)
-        {
-            break;
-        }
-    }
 
-    if (keys[1] == "+")
-    {
-        if ((std::isdigit(*keys[0].data())) || (std::isdigit(*keys[2].data())))
-        {
-            std::cout << "Can not add matrices and scalars." << std::endl;
-            return;
-        }
+    std::string parsed_computation = Parser::parseComputation(computation);
+    calculate(parsed_computation);
+}
 
-        addMatrices(keys[0], keys[2]);
-    }
-    else if (keys[1] == "-")
+std::string System::calculate(const std::string& expression)
+{
+    std::istringstream iss(expression);
+    std::vector<std::string> stack;
+    std::cout << "Input\tOperation\tStack after" << std::endl;
+    std::string token;
+    while (iss >> token)
     {
-        if ((std::isdigit(*keys[0].data())) || (std::isdigit(*keys[2].data())))
+        std::cout << token << "\t";
+        size_t idx = ops.find(token);
+        if (idx == std::string::npos)
         {
-            std::cout << "Can not subtract matrices and scalars." << std::endl;
-            return;
-        }
-
-        subtractMatrices(keys[0], keys[2]);
-    }
-    else if (keys[1] == "*")
-    {
-        if (std::isdigit(*keys[0].data()))
-        {
-            multiplyByScalar(keys[0], keys[2]);
-        }
-        else if (std::isdigit(*keys[2].data()))
-        {
-            multiplyByScalar(keys[2], keys[0]);
+            std::cout << "Push\t\t";
+            stack.push_back(token);
         }
         else
         {
-            multiplyMatrices(keys[0], keys[2]);
+            std::cout << "Operate\t\t";
+            if (stack.empty())
+            {
+                std::cout << "Empty" << std::endl;
+            }
+            std::string secondOperand = stack.back();
+            stack.pop_back();
+            std::string firstOperand = stack.back();
+            stack.pop_back();
+            if (token == "*")
+            {
+                if (std::isdigit(firstOperand.data()))
+                {
+                    if (std::isdigit(secondOperand.data()))
+                    {
+                        double result = std::stod(firstOperand) * std::stod(secondOperand);
+                        stack.push_back(std::to_string(result));
+                    }
+                    else
+                    {
+                        stack.push_back(multiplyByScalar(firstOperand, secondOperand));
+                    }
+                }
+                else if (std::isdigit(secondOperand.data()))
+                {
+                    stack.push_back(multiplyByScalar(secondOperand, firstOperand));
+                }
+                else
+                {
+                    stack.push_back(multiplyMatrices(firstOperand, secondOperand));
+                }
+            }
+            else if (token == "/")
+            {
+                if (std::isdigit(firstOperand.data()) && (std::isdigit(secondOperand.data())))
+                {
+                    double result = std::stod(firstOperand) / std::stod(secondOperand);
+                    stack.push_back(std::to_string(result));
+                }
+                else
+                {
+                    stack.push_back(divide(firstOperand, secondOperand));
+                }
+            }
+            else if (token == "-")
+            {
+                if (std::isdigit(firstOperand.data()) && (std::isdigit(secondOperand.data())))
+                {
+                    double result = std::stod(firstOperand) - std::stod(secondOperand);
+                    stack.push_back(std::to_string(result));
+                }
+                else
+                {
+                    stack.push_back(subtract(firstOperand, secondOperand));
+                }
+            }
+            else if (token == "+")
+            {
+                if (std::isdigit(firstOperand.data()) && (std::isdigit(secondOperand.data())))
+                {
+                    double result = std::stod(firstOperand) + std::stod(secondOperand);
+                    stack.push_back(std::to_string(result));
+                }
+                else
+                {
+                    stack.push_back(add(firstOperand, secondOperand));
+                }
+            }
+            // else if (token == "^")
+            // {
+            //     stack.push_back(firstOperand + secondOperand);
+            // }
+            else
+            {
+                std::cerr << "Error" << std::endl;
+                std::exit(1);
+            }
         }
+        std::copy(stack.begin(), stack.end(), std::ostream_iterator<std::string>(std::cout, " "));
+        std::cout << std::endl;
     }
-    else if (keys[1] == "/")
-    {
-        if ((std::isdigit(*keys[0].data())) && (!std::isdigit(*keys[2].data())))
-        {
-            std::cout << "Can not divide scalar by matrix" << std::endl;
-            return;
-        }
-        else if ((!std::isdigit(*keys[0].data())) && (!std::isdigit(*keys[2].data())))
-        {
-            std::cout << "Can not divide a matrix by matrix" << std::endl;
-            return;
-        }
-        divideByScalar(keys[0], keys[2]);
-    }
-    else
-    {
-        std::cout << "Unsupported operation." << std::endl;
-    }
+    return stack.back();
 }
 
-void System::addMatrices(const std::string& key_1, const std::string& key_2)
+
+void System::add(const std::string& key_1, const std::string& key_2)
 {
     Matrix matrix_1 = matrices.find(key_1)->second;
     Matrix matrix_2 = matrices.find(key_2)->second;
+
+    if ((std::isdigit(*key_1.data())) || (std::isdigit(*key_2.data())))
+    {
+        std::cout << "Can not add matrices and scalars." << std::endl;
+        return;
+    }
 
     if ((matrix_1.getRows() != matrix_2.getRows()) || (matrix_1.getColumns() != matrix_2.getColumns()))
     {
@@ -125,8 +159,14 @@ void System::addMatrices(const std::string& key_1, const std::string& key_2)
     result.print();
 }
 
-void System::subtractMatrices(const std::string& key_1, const std::string& key_2)
+void System::subtract(const std::string& key_1, const std::string& key_2)
 {
+    if ((std::isdigit(*key_1.data())) || (std::isdigit(*key_2.data())))
+    {
+        std::cout << "Can not subtract matrices and scalars." << std::endl;
+        return;
+    }
+
     Matrix matrix_1 = matrices.find(key_1)->second;
     Matrix matrix_2 = matrices.find(key_2)->second;
 
@@ -160,6 +200,16 @@ void System::multiplyMatrices(const std::string& key_1, const std::string& key_2
 
 void System::divideByScalar(const std::string& key_1, const std::string& key_2)
 {
+    if ((std::isdigit(*key_1.data())) && (!std::isdigit(*key_2.data())))
+    {
+        std::cout << "Can not divide scalar by matrix" << std::endl;
+        return;
+    }
+    else if ((!std::isdigit(*key_1.data())) && (!std::isdigit(*key_2.data())))
+    {
+        std::cout << "Can not divide a matrix by matrix" << std::endl;
+        return;
+    }
     Matrix matrix = matrices.find(key_1)->second;
     int divisor = std::stoi(key_2);
 
