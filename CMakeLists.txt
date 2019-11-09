@@ -10,6 +10,7 @@ set(SOURCES
     src/system.cpp
     include/matrix.hpp
     include/system.hpp
+    include/utility.hpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
