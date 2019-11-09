@@ -48,7 +48,7 @@ int main()
         }
         else if (option == "B")
         {
-            system.parseComputation();
+            system.performComputation();
         }
         else if (option == "C")
         {
