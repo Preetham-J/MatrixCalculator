@@ -8,18 +8,11 @@
 #ifndef PARSER_HPP
 #define PARSER_HPP
 
-#include <vector>
+#include <exception>
 #include <string>
-#include <sstream>
-#include <iostream>
-#include <cmath>
-#include <algorithm>
-#include <iterator>
-#include <cstdlib>
-#include <stack>
 
 /* Parsing related utility functions.*/
-namespace Parser
+namespace Utility
 {
     const std::string ops = "-+/*^";
    
@@ -48,6 +41,21 @@ namespace Parser
         }
         return output;
     }
+
+
+    struct Exception : public std::exception
+    {
+        std::string error;
+
+        Exception(std::string ss) : error(ss) {}
+
+        ~Exception() throw () {}
+
+        const char* what() const throw()
+        {
+            return error.c_str();
+        }
+    };
 }
 
 #endif /* !PARSER_HPP */
