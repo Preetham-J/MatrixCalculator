@@ -9,10 +9,14 @@
 #include "utility.hpp"
 
 #include <string>
-#include <utility>
 #include <iostream>
 #include <cctype>
 #include <vector>
+#include <cmath>
+#include <algorithm>
+#include <iterator>
+#include <cstdlib>
+#include <stack>
 
 
 System::System() {};
@@ -39,17 +43,20 @@ void System::performComputation()
     std::getline(std::cin, computation, '\n');
     std::vector<std::string> keys;
 
-    std::string parsed_computation = parseComputation(computation);
-    if (parsed_computation == "")
+    std::string result;
+    std::string parsed_computation;
+    try
     {
+        parsed_computation = parseComputation(computation);
+        result = calculate(parsed_computation);
+    }
+    catch (const Utility::Exception& error)
+    {
+        std::cout << "Error in computation. Returning." << std::endl;
         return;
     }
-    std::string result = calculate(parsed_computation);
-    if (result == "")
-    {
-        return;
-    }
-    else if (std::isdigit(*result.data()))
+
+    if (std::isdigit(*result.data()))
     {
         std::cout << "Result: " << result << std::endl;
     }
@@ -138,25 +145,17 @@ std::string System::calculate(const std::string& expression)
 {
     std::istringstream iss(expression);
     std::vector<std::string> stack;
-    std::cout << "Input\tOperation\tStack after" << std::endl;
     std::string token;
     computation_matrices = matrices;
     while (iss >> token)
     {
-        std::cout << token << "\t";
         size_t idx = Utility::ops.find(token);
         if (idx == std::string::npos)
         {
-            std::cout << "Push\t\t";
             stack.push_back(token);
         }
         else
         {
-            std::cout << "Operate\t\t";
-            if (stack.empty())
-            {
-                std::cout << "Empty" << std::endl;
-            }
             std::string secondOperand = stack.back();
             stack.pop_back();
             std::string firstOperand = stack.back();
@@ -172,16 +171,40 @@ std::string System::calculate(const std::string& expression)
                     }
                     else
                     {
-                        stack.push_back(multiplyByScalar(firstOperand, secondOperand));
+                        try
+                        {
+                            stack.push_back(multiplyByScalar(firstOperand, secondOperand));
+                        }
+                        catch (const Utility::Exception& error)
+                        {
+                            std::cout << "Exception: " << error.what() << std::endl;
+                            throw;
+                        }
                     }
                 }
                 else if (std::isdigit(*secondOperand.data()))
                 {
-                    stack.push_back(multiplyByScalar(secondOperand, firstOperand));
+                    try
+                    {
+                        stack.push_back(multiplyByScalar(secondOperand, firstOperand));
+                    }
+                    catch (const Utility::Exception& error)
+                    {
+                        std::cout << "Exception: " << error.what() << std::endl;
+                        throw;
+                    }
                 }
                 else
                 {
-                    stack.push_back(multiplyMatrices(firstOperand, secondOperand));
+                    try
+                    {
+                        stack.push_back(multiplyMatrices(firstOperand, secondOperand));
+                    }
+                    catch (const Utility::Exception& error)
+                    {
+                        std::cout << "Exception: " << error.what() << std::endl;
+                        throw;
+                    }
                 }
             }
             else if (token == "/")
@@ -193,18 +216,15 @@ std::string System::calculate(const std::string& expression)
                 }
                 else if ((std::isdigit(*firstOperand.data()) && (!std::isdigit(*secondOperand.data()))))
                 {
-                    std::cout << "Can not divide scalar by matrix" << std::endl;
-                    return "";
+                    throw Utility::Exception("Can not divide scalar by matrix");
                 }
                 else if ((!std::isdigit(*firstOperand.data())) && (std::isdigit(*secondOperand.data())))
                 {
-                    std::cout << "Can not divide a matrix by matrix" << std::endl;
-                    return "";
+                    throw Utility::Exception("Can not divide a matrix by matrix");
                 }
                 else
                 {
-                    std::cout << "Can not divide a matrix by matrix." << std::endl;
-                    return "";
+                    throw Utility::Exception("Can not divide a matrix by matrix.");
                 }
             }
             else if (token == "-")
@@ -216,12 +236,19 @@ std::string System::calculate(const std::string& expression)
                 }
                 if (std::isdigit(*firstOperand.data()) || (std::isdigit(*secondOperand.data())))
                 {
-                    std::cout << "Can not subtract matrices and scalars." << std::endl;
-                    return "";
+                    throw Utility::Exception("Can not subtract matrices and scalars.");
                 }
                 else
                 {
-                    stack.push_back(subtract(firstOperand, secondOperand));
+                    try
+                    {
+                        stack.push_back(subtract(firstOperand, secondOperand));
+                    }
+                    catch (const Utility::Exception& error)
+                    {
+                        std::cout << "Exception: " << error.what() << std::endl;
+                        throw;
+                    }
                 }
             }
             else if (token == "+")
@@ -233,12 +260,19 @@ std::string System::calculate(const std::string& expression)
                 }
                 if (std::isdigit(*firstOperand.data()) || (std::isdigit(*secondOperand.data())))
                 {
-                    std::cout << "Can not add matrices and scalars." << std::endl;
-                    return "";
+                    throw Utility::Exception("Can not add matrices and scalars.");
                 }
                 else
                 {
-                    stack.push_back(add(firstOperand, secondOperand));
+                    try
+                    {
+                        stack.push_back(add(firstOperand, secondOperand));
+                    }
+                    catch (const Utility::Exception& error)
+                    {
+                        std::cout << "Exception: " << error.what() << std::endl;
+                        throw;
+                    }
                 }
             }
             // else if (token == "^")
@@ -247,11 +281,9 @@ std::string System::calculate(const std::string& expression)
             // }
             else
             {
-                std::cerr << "Error" << std::endl;
-                std::exit(1);
+                throw Utility::Exception("Unsupported operation or value provided.");
             }
         }
-        std::copy(stack.begin(), stack.end(), std::ostream_iterator<std::string>(std::cout, " "));
         std::cout << std::endl;
     }
     return stack.back();
@@ -265,8 +297,7 @@ std::string System::add(const std::string& key_1, const std::string& key_2)
 
     if ((matrix_1.getRows() != matrix_2.getRows()) || (matrix_1.getColumns() != matrix_2.getColumns()))
     {
-        std::cout << "The matrices entered do not have the same dimensions!" << std::endl;
-        return "";
+        throw Utility::Exception("The matrices entered do not have the same dimensions!");
     }
 
     return addMatrix(matrix_1 + matrix_2);
@@ -279,8 +310,7 @@ std::string System::subtract(const std::string& key_1, const std::string& key_2)
 
     if ((matrix_1.getRows() != matrix_2.getRows()) || (matrix_1.getColumns() != matrix_2.getColumns()))
     {
-        std::cout << "The matrices entered do not have the same dimensions!" << std::endl;
-        return "";
+        throw Utility::Exception("The matrices entered do not have the same dimensions!");
     }
 
     return addMatrix(matrix_1 - matrix_2);
@@ -301,8 +331,7 @@ std::string System::multiplyMatrices(const std::string& key_1, const std::string
 
     if (matrix_1.getRows() != matrix_2.getColumns())
     {
-        std::cout << "The matrices entered do not have matching row = column dimensions for multiplying!" << std::endl;
-        return "";
+        throw Utility::Exception("The matrices entered do not have matching row = column dimensions for multiplying!");
     }
 
     return addMatrix(matrix_1 * matrix_2);
