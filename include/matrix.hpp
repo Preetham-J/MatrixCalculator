@@ -24,8 +24,6 @@ class Matrix
 
         /* Initialize Eigen Matrix member given user. */
         void init();
-        /* Add row to internal matrix. */
-        bool addRow(std::string row, int current_row);
 
         /* Get reference to internal matrix. */
         Eigen::MatrixXd& getMatrix();
@@ -89,6 +87,9 @@ class Matrix
         }
 
     private:
+        /* Add row to internal matrix. */
+        bool addRow(std::string row, int current_row);
+
         int rows;                      // Matrix rows
         int columns;                   // Matrix columns
         Eigen::MatrixXd matrix;        // Internal Eigen Matrix
