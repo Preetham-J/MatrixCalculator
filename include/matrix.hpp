@@ -22,23 +22,23 @@ class Matrix
         /* Copy constructor. */
         Matrix(const Matrix& obj);
 
-        /* Initialize Eigen Matrix member given user. */
+        /* Initialize Eigen Matrix member given user input. */
         void init();
 
         /* Get reference to internal matrix. */
-        Eigen::MatrixXd& getMatrix();
+        const Eigen::MatrixXd& getMatrix() const;
         /* Print matrix. */
-        void print();
+        void print() const;
         /* Get number of rows in matrix. */
-        int getRows();
+        int getRows() const;
         /* Get number of columns in matrix. */
-        int getColumns();
+        int getColumns() const;
         /* Set internal matrix to new Eigen matrix. */
         void setMatrix(Eigen::MatrixXd& new_matrix);
 
         /* Operator Overloads*/
         /* Matrix + Matrix*/
-        Matrix& operator + (Matrix& obj)
+        Matrix& operator + (const Matrix& obj)
         {
             Matrix& res = *this;
             res.matrix = this->getMatrix() + obj.getMatrix();
@@ -46,7 +46,7 @@ class Matrix
         }
 
         /* Matrix - Matrix*/
-        Matrix& operator - (Matrix& obj)
+        Matrix& operator - (const Matrix& obj)
         {
             Matrix& res = *this;
             res.matrix = this->getMatrix() - obj.getMatrix();
@@ -62,7 +62,7 @@ class Matrix
         }
 
         /* Matrix * Scalar*/
-        Matrix& operator * (int& val)
+        Matrix& operator * (const int& val)
         {
             Matrix& res = *this;
             res.matrix = this->getMatrix() * val;
@@ -70,7 +70,7 @@ class Matrix
         }
 
         /* Matrix / Scalar*/
-        Matrix& operator / (int& val)
+        Matrix& operator / (const int& val)
         {
             Matrix& res = *this;
             res.matrix = this->getMatrix() / val;
@@ -78,12 +78,20 @@ class Matrix
         }
 
         /* Matrix Copy*/
-        Matrix& operator = (Matrix& obj)
+        Matrix& operator = (const Matrix& obj)
         {
             this->matrix = obj.matrix;
             this->rows = obj.rows;
             this->columns = obj.columns;
             return *this;
+        }
+
+        /* Equality */
+        bool operator == (const Matrix& obj) const
+        {
+            return (this->matrix == obj.matrix) &&
+                   (this->rows == obj.getRows()) &&
+                   (this->columns == obj.getColumns());
         }
 
     private:

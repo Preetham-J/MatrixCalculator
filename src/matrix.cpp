@@ -72,22 +72,22 @@ void Matrix::setMatrix(Eigen::MatrixXd& new_matrix)
     matrix = new_matrix;
 }
 
-Eigen::MatrixXd& Matrix::getMatrix()
+const Eigen::MatrixXd& Matrix::getMatrix() const
 {
     return matrix;
 }
 
-int Matrix::getRows()
+int Matrix::getRows() const
 {
     return rows;
 }
 
-int Matrix::getColumns()
+int Matrix::getColumns() const
 {
     return columns;
 }
 
-void Matrix::print()
+void Matrix::print() const
 {
     std::cout << matrix << std::endl;
 }

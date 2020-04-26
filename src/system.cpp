@@ -141,6 +141,7 @@ std::string System::parseComputation(const std::string& infix)
 
     return ss.str();
 }
+
 std::string System::calculate(const std::string& expression)
 {
     std::istringstream iss(expression);
@@ -288,7 +289,6 @@ std::string System::calculate(const std::string& expression)
     }
     return stack.back();
 }
-
 
 std::string System::add(const std::string& key_1, const std::string& key_2)
 {
